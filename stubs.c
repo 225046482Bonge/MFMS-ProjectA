@@ -1,6 +1,6 @@
 /* stubs.c - TEMPORARY placeholders (Student 6)
  * When a teammate pushes a real module, delete that stub function
- * from this file, and remove stubs.c from the Makefile once it is empty. */
+ * from this file, and remove stubs.c from the gcc command once it is empty. */
 #include <stdio.h>
 #include "mfms.h"
 #include "validation.h"

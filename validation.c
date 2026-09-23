@@ -168,15 +168,18 @@ int textToInt(char text[])
     int length = strlen(text);
     int value = 0;
     int sign = 1;
-    int i = 0;
+    int start = 0;
+    int i;
 
     if (text[0] == '-')
     {
         sign = -1;
-        i = 1;
+        start = 1;
     }
 
-    for (; i < length; i++)
+    /* Each digit character minus '0' gives its number: '7' - '0' = 7.
+     * Multiplying the value so far by 10 moves it one place left. */
+    for (i = start; i < length; i++)
     {
         value = value * 10 + (text[i] - '0');
     }
@@ -191,15 +194,16 @@ double textToDouble(char text[])
     double place = 0.1;
     int sign = 1;
     int afterDot = 0;
-    int i = 0;
+    int start = 0;
+    int i;
 
     if (text[0] == '-')
     {
         sign = -1;
-        i = 1;
+        start = 1;
     }
 
-    for (; i < length; i++)
+    for (i = start; i < length; i++)
     {
         if (text[i] == '.')
         {
