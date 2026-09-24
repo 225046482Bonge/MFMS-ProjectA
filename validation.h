@@ -1,27 +1,27 @@
-/* validation.h - Input and validation functions (Student 6)
- * Everyone in the group uses these instead of calling scanf() directly.
- * Include this header once in each .c file that needs it. */
+/* validation.h - Functions for input and validation (Student 6)
+* Each member of the group relies on these rather than calling scanf() directly.
+* Add this header a single time to every .c file that requires it. /
 
-/* Reading text */
+/ Reading text /
 void readText(char text[], int size);
 
-/* Checking text (return 1 if valid, 0 if not) */
+/ Verifying text (return 1 when valid, 0 when not) /
 int isWholeNumber(char text[]);
 int isDecimalNumber(char text[]);
 int isBlank(char text[]);
 int isValidEmail(char text[]);
 int isValidPhone(char text[]);
 
-/* Converting text to a number */
+/ Turning text into a number /
 int textToInt(char text[]);
 double textToDouble(char text[]);
 
-/* Validated input: each one repeats until the user enters a valid value */
+/ Validated input: every function loops until the user supplies a valid value /
 int getInt(char prompt[], int min, int max);
 double getDouble(char prompt[], double min, double max);
 void getNonEmptyString(char prompt[], char text[], int size);
 void getEmail(char prompt[], char text[], int size);
 void getPhone(char prompt[], char text[], int size);
 
-/* Waits for the user to press Enter */
+/ Waits for the user to press Enter */
 void pauseScreen();
