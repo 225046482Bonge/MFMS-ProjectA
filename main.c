@@ -1,4 +1,4 @@
-/* main.c - Main menu and program start (Student 6) */
+/* main.c - Main menu and program start */
 #include
 #include "mfms.h"
 #include "validation.h"

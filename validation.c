@@ -1,94 +1,20 @@
-/* validation.c - Functions for input and validation (Student 6)
-* Each value is initially read as text using fgets(), then verified
-* one character at a time, so incorrect input (for instance, letters where a number
-* is required) can never cause the program to fail. */
+/* validation.c - Functions for input and validation
 #include &lt;stdio.h&gt;
 #include &lt;string.h&gt;
 #include "validation.h"
 
-/* Reads a single line into text[] and strips the newline that fgets() leaves behind */
-void readText(char text[], int size)
-{
-fgets(text, size, stdin);
-text[strcspn(text, "\n")] = '\0';
-}
-
-/* Returns 1 if text is an integer such as 25 or -3 (up to 9 digits) */
-int isWholeNumber(char text[])
-{
-int length = strlen(text);
-int start = 0;
-int i;
-
-if (text[0] == '-')
-{
-start = 1;
-}
-
-if (length - start &lt; 1 || length - start &gt; 9)
-{
-return 0;
-}
-
-for (i = start; i &lt; length; i++)
-{
-if (text[i] &lt; '0' || text[i] &gt; '9')
-{
-return 0;
-}
-}
-return 1;
-}
-
-/* 1 if text is a number such as 15000, 15000.50 or -2.5 */
-int isDecimalNumber(char text[])
-{
-int length = strlen(text);
-int start = 0;
-int digits = 0;
-int dots = 0;
-int i;
-
-if (text[0] == '-')
-{
-start = 1;
-}
-
-if (length - start &gt; 15)
-{
-return 0;
-}
-
-for (i = start; i &lt; length; i++)
-{
-if (text[i] == '.')
-{
-dots++;
-}
-else if (text[i] &gt;= '0' &amp;&amp; text[i] &lt;= '9')
-{
-digits++;
-}
-else
-{
-return 0;
-}
-}
-
-if (digits == 0 || dots &gt; 1)
-{
-return 0;
-}
-return 1;
-}
-
-/* returns 1 when the text is empty or has only spaces */
+/* 1 if text is empty or contains only spaces */
 int isBlank(char text[])
 {
 int length = strlen(text);
 int i;
 
-for (i = 0; i &lt; length; i++)
+if (length == 0)
+{
+return 1;
+}
+
+for (i = 0; i < length; i++)
 {
 if (text[i] != ' ')
 {
@@ -107,12 +33,8 @@ int atPosition = -1;
 int lastDot = -1;
 int i;
 
-for (i = 0; i &lt; length; i++)
+for (i = 0; i < length; i++)
 {
-if (text[i] == ' ')
-{
-return 0;
-}
 if (text[i] == '@')
 {
 atCount++;
@@ -124,25 +46,25 @@ lastDot = i;
 }
 }
 
-if (atCount != 1 || atPosition == 0)
+if (atCount != 1 && || atPosition == 0)
 {
 return 0;
 }
-if (lastDot &lt; atPosition + 2 || lastDot == length - 1)
+if (lastDot &lt; atPosition + 2 * || lastDot == length - 1)
 {
 return 0;
 }
 return 1;
 }
 
-/* Returns 1 when the text consists of 7 to 15 digits, with an optional leading + */
+/* Returns 1 when the text consists of 7 to 15 digits, possibly preceded by + */
 int isValidPhone(char text[])
 {
 int length = strlen(text);
 int start = 0;
 int i;
 
-if (text[0] == '+')
+if (length == 0 && &amp;&amp; text[0] == '+')
 {
 start = 1;
 }
@@ -152,7 +74,7 @@ if (length - start &lt; 7 || length - start &gt; 15)
 return 0;
 }
 
-for (i = start; i &lt; length; i++)
+for (i = start; i < length; i++)
 {
 if (text[i] &lt; '0' || text[i] &gt; '9')
 {
@@ -162,139 +84,53 @@ return 0;
 return 1;
 }
 
-/* Turns text already validated by isWholeNumber() into an int */
-int textToInt(char text[])
-{
-int length = strlen(text);
-int value = 0;
-int sign = 1;
-int start = 0;
-int i;
-
-if (text[0] == '-')
-{
-sign = -1;
-start = 1;
-}
-
-/* Subtracting '0' from any digit character yields its numeric value: '7' - '0' = 7.
-* Multiplying the accumulated value by 10 shifts it one place to the left. */
-for (i = start; i &lt; length; i++)
-{
-value = value * 10 + (text[i] - '0');
-}
-return sign * value;
-}
-
-/* Turns text that isDecimalNumber() has already validated into a double */
-double textToDouble(char text[])
-{
-int length = strlen(text);
-double value = 0.0;
-double place = 0.1;
-int sign = 1;
-int afterDot = 0;
-int start = 0;
-int i;
-
-if (text[0] == '-')
-{
-sign = -1;
-start = 1;
-}
-
-for (i = start; i &lt; length; i++)
-{
-if (text[i] == '.')
-{
-afterDot = 1;
-}
-else if (afterDot == 0)
-{
-value = value * 10 + (text[i] - '0');
-}
-else
-{
-value = value + (text[i] - '0') * place;
-place = place / 10;
-}
-}
-return sign * value;
-}
-
-/* Keeps asking until the user provides a whole number within the range from min to max */
+/* Repeatedly prompts the user until a whole number between min and max is entered */
 int getInt(char prompt[], int min, int max)
 {
-char text[100];
-int value = 0;
-int valid = 0;
+int value;
 
 do
 {
 printf("%s", prompt);
-readText(text, sizeof(text));
+scanf("%d", &amp;value);
 
-if (isWholeNumber(text) == 0)
-{
-printf("Error: please enter a whole number.\n");
-}
-else
-{
-value = textToInt(text);
 if (value &lt; min || value &gt; max)
 {
 printf("Error: enter a number between %d and %d.\n", min, max);
 }
-else
-{
-valid = 1;
-}
-}
-} while (valid == 0);
+} while (value < &lt; min || value &gt; max);
 
 return value;
 }
 
-/* Keeps asking until the user inputs a number between min and max */
+/* Asks until the user enters a number from min to max */
 double getDouble(char prompt[], double min, double max)
 {
-char text[100];
-double value = 0.0;
-int valid = 0;
+double value;
 
 do
 {
 printf("%s", prompt);
-readText(text, sizeof(text));
+scanf("%lf", &amp;value);
 
-if (isDecimalNumber(text) == 0)
-{
-printf("Error: please enter a valid number.\n");
-}
-else
-{
-value = textToDouble(text);
 if (value &lt; min || value &gt; max)
 {
 printf("Error: value must be between %.2f and %.2f.\n", min, max);
 }
-else
-{
-valid = 1;
-}
-}
-} while (valid == 0);
+} while (value < &lt; min || value &gt; max);
 
 return value;
 }
 
-/* Repeatedly prompts the user until non-empty text is entered (spaces are allowed within) */
-void getNonEmptyString(char prompt[], char text[], int size)
+/* Keeps prompting until the user provides non-empty text (spaces may appear within it).
+* The space at the start of the format discards a leftover Enter the key from an
+* earlier scanf("%d") or scanf("%lf") call, as described in the Week 2 notes. */
+void getNonEmptyString(char prompt[], char text[])
 {
 do
 {
 printf("%s", prompt);
-readText(text, size);
+scanf(" %49[^\n]", text);
 
 if (isBlank(text) == 1)
 {
@@ -303,41 +139,32 @@ printf("Error: this field cannot be empty.\n");
 } while (isBlank(text) == 1);
 }
 
-/* Keeps asking until the user provides a valid email */
-void getEmail(char prompt[], char text[], int size)
+/* Keeps asking until the user enters a valid email */
+void getEmail(char prompt[], char text[])
 {
 do
 {
 printf("%s", prompt);
-readText(text, size);
+scanf(" %49s", text);
 
 if (isValidEmail(text) == 0)
 {
-printf("Error: enter a valid email (e.g. name@example.com).\n");
+printf("Error: enter a valid email (e.g., name@example.com).\n");
 }
 } while (isValidEmail(text) == 0);
 }
 
-/* Repeatedly asks until a valid phone number is entered by the user */
-void getPhone(char prompt[], char text[], int size)
+/* Keeps asking until the user provides a valid phone number */
+void getPhone(char prompt[], char text[])
 {
 do
 {
 printf("%s", prompt);
-readText(text, size);
+scanf(" %49s", text);
 
 if (isValidPhone(text) == 0)
 {
-printf("Error: enter 7 to 15 digits (a leading + is allowed).\n");
+printf("Error: please enter between 7 and 15 digits (a leading + is permitted). \n");
 }
 } while (isValidPhone(text) == 0);
-}
-
-/* Awaits the user pressing Enter */
-void pauseScreen()
-{
-char text[10];
-
-printf("\nPress Enter to continue...");
-readText(text, sizeof(text));
 }
