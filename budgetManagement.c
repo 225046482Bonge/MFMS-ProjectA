@@ -1,23 +1,5 @@
 #include <stdio.h>
-
-const int maxDepartment = 50;
-
-void enterBudget(int n,
-                 char department[][50],
-                 double budget[],
-                 double expenditure[],
-                 double remaining[]);
-
-void displayBudget(int n,
-                   char department[][50],
-                   double budget[],
-                   double expenditure[],
-                   double remaining[]);
-
-void checkExceeded(int n,
-                   char department[][50],
-                   double budget[],
-                   double expenditure[]);
+#include "budgetManagement.h"
 
 void budgetMenu() {
     int n;
