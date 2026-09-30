@@ -22,4 +22,8 @@ void checkExceeded(int n,
 
 void budgetMenu();
 
+<<<<<<< HEAD
 #endif
+=======
+#endif
+>>>>>>> origin/main
