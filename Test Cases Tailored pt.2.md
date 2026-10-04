@@ -29,16 +29,6 @@
 | TC-23 | Supplier report integration | Add supplier and open Supplier Report | Supplier ID and name appear | **Pass — supplier data displays correctly** |
 | TC-24 | Asset capacity | Attempt to exceed 50 assets | Clear full-registry message; no overflow | **Pass — capacity limits handled safely** |
 | TC-25 | Cross-module navigation | Visit each module then return to main menu | App remains stable and data/counts are consistent | **Pass — program remains stable across menu navigation** |
-
-## Bug report template
-For each failure, record:
-- Test ID:
-- Date:
-- Module:
-- Steps:
-- Expected result:
-- Actual result:
-- Screenshot/terminal evidence:
 - Assigned developer:
 - Status: Resolved
 - Retest result: Pass
