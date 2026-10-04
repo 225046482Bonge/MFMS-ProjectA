@@ -1,6 +1,6 @@
-/* main.c - Main menu and program start */
 #include <stdio.h>
-#include "mfms.h"
+#include "employees.h"
+#include "assets.h"
 #include "validation.h"
 #include "budgetManagement.h"
 #include "suppliers.h"
