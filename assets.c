@@ -53,7 +53,7 @@ int addAsset(char ids[][50], char names[][50], char types[][50],
 
     char id[50];
     printf("\nEnter Asset ID: ");
-    getNonEmptyString(id, sizeof(id));
+    getNonEmptyString("Enter Asset ID: ", id);
 
     if (assetFind(ids, count, id) != -1) {
         printf("Error: Asset ID '%s' already exists.\n", id);
@@ -63,13 +63,13 @@ int addAsset(char ids[][50], char names[][50], char types[][50],
     strcpy(ids[count], id);
 
     printf("Enter Asset Name: ");
-    getNonEmptyString(names[count], sizeof(names[count]));
+    getNonEmptyString("Enter Asset Name: ", names[count]);
 
     printf("Enter Asset Type: ");
-    getNonEmptyString(types[count], sizeof(types[count]));
+    getNonEmptyString("Enter Asset Type: ", types[count]);
 
     printf("Enter Department: ");
-    getNonEmptyString(departments[count], sizeof(departments[count]));
+    getNonEmptyString("Enter Asset Department: ", departments[count]);
 
     values[count] = getDouble("Enter Asset Value ($): ", 0.0, 10000000.0);
     conditions[count] = getInt("Enter Condition (1-Good, 2-Fair, 3-Poor, 4-Broken): ", 1, 4);
@@ -104,7 +104,7 @@ void searchAssetById(char ids[][50], char names[][50], char types[][50],
 
     char searchId[50];
     printf("\nEnter Asset ID to search: ");
-    getNonEmptyString(searchId, sizeof(searchId));
+    getNonEmptyString("Enter Asset ID to search: ", searchId);
 
     int index = assetFind(ids, count, searchId);
     if (index == -1) {
@@ -128,7 +128,7 @@ void searchAssetByDept(char ids[][50], char names[][50], char types[][50],
 
     char dept[50];
     printf("\nEnter Department Name: ");
-    getNonEmptyString(dept, sizeof(dept));
+    getNonEmptyString("Enter Department to search: ", dept);
 
     int found = 0;
     printf("\n========================================================================================\n");

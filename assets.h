@@ -14,5 +14,5 @@ void searchAssetById(char ids[][50], char names[][50], char types[][50],
                      char departments[][50], double values[], int conditions[], int count);
 void searchAssetByDept(char ids[][50], char names[][50], char types[][50],
                        char departments[][50], double values[], int conditions[], int count);
-void displayAssetSummary(double valu, double values[], int conditions[], int count);
+void displayAssetSummary(double values[], int count);
 #endif
