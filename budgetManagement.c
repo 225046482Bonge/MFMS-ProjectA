@@ -9,12 +9,7 @@ int budgetMenu(double budget[],
     double remaining[maxDepartment];
 
     printf("How many departments? ");
-
-while (scanf("%d", &n) != 1){
-    printf("Invalid input. Enter a whole number: ");
-
-    while (getchar() != '\n');
-}
+    scanf("%d", &n);
 
     if (n <= 0 || n > maxDepartment) {
         printf("Invalid number of departments.\n");
@@ -40,21 +35,7 @@ void enterBudget(int n,
         scanf("%49s", department[i]);
 
         printf("Allocated Budget (N$): ");
-
-while (scanf("%lf", &budget[i]) != 1){
-    printf("Invalid input. Enter a numeric budget: ");
-
-    while (getchar() != '\n');
-}
-
-while (budget[i] < 0){
-    printf("Budget cannot be negative. Enter again: ");
-
-    while (scanf("%lf", &budget[i]) != 1){
-        printf("Invalid input. Enter a numeric budget: ");
-        while (getchar() != '\n');
-    }
-}
+        scanf("%lf", &budget[i]);
 
         while (budget[i] < 0) {
             printf("Budget cannot be negative. Enter again: ");
@@ -62,24 +43,7 @@ while (budget[i] < 0){
         }
 
         printf("Expenditure (N$): ");
-
-while (scanf("%lf", &expenditure[i]) != 1)
-{
-    printf("Invalid input. Enter a numeric expenditure: ");
-
-    while (getchar() != '\n');
-}
-
-while (expenditure[i] < 0)
-{
-    printf("Expenditure cannot be negative. Enter again: ");
-
-    while (scanf("%lf", &expenditure[i]) != 1)
-  {
-        printf("Invalid input. Enter a numeric expenditure: ");
-        while (getchar() != '\n');
-    }
-}
+        scanf("%lf", &expenditure[i]);
 
         while (expenditure[i] < 0) {
             printf("Expenditure cannot be negative. Enter again: ");
