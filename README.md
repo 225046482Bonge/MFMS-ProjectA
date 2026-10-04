@@ -23,7 +23,6 @@ The Municipal Financial Management System (MFMS) is a menu-driven C application 
 - `reports.c/.h` — report menu and report calculations
 - `validation.c/.h` — reusable input-validation functions
 - `mfms.h` — shared declarations
-- `stubs.c` — temporary placeholders for unfinished modules
 - `test_validation.c` — standalone validation-function test program
 
 ## Build
@@ -32,8 +31,6 @@ The full-system build command must be confirmed after the module interfaces are 
 ```bash
 gcc -std=c99 -Wall -Wextra -pedantic main.c budgetManagement.c suppliers.c assets.c reports.c validation.c -o mfms
 ```
-
-Do not include `stubs.c` once real implementations of all stubbed modules have been integrated. The exact source list may change with the final project structure.
 
 ## Run
 Windows:
