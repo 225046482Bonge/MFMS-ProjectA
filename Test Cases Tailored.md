@@ -30,15 +30,5 @@
 | TC-24 | Asset capacity | Attempt to exceed 50 assets | Clear full-registry message; no overflow | Blocked by build |
 | TC-25 | Cross-module navigation | Visit each module then return to main menu | App remains stable and data/counts are consistent | Blocked by build/integration issues |
 
-## Bug report template
-For each failure, record:
-- Test ID:
-- Date:
-- Module:
-- Steps:
-- Expected result:
-- Actual result:
-- Screenshot/terminal evidence:
-- Assigned developer:
 - Status:
 - Retest result:
