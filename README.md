@@ -68,6 +68,3 @@ Then run `test_validation.exe` on Windows or `./test_validation` on Linux/macOS.
 
 ## Repository
 GitHub URL: https://github.com/225046482Bonge/MFMS-ProjectA 
-
-## Documentation and testing
-Add the completed test results, known issues, and the final technical report after the group has tested the integrated program. Do not claim tests passed unless they were actually run.
