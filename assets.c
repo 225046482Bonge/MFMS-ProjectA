@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <strings.h>
 #include "assets.h"
 #include "validation.h"
 
@@ -31,9 +30,9 @@ void assetPrintRow(char ids[][50], char names[][50], char types[][50],
     char condText[30];
     assetCondition(conditions[index], condText);
     
-    printf("%-10s %-20s %-15s %-15s %-12.2f %-20s\n",
+    printf("%-10s %-20s %-15s %-15s %-16s %-20s\n",
            ids[index], names[index], types[index],
-           departments[index], values[index], condText);
+           departments[index], formatMoney(values[index]), condText);
 }
 
 int assetFind(char ids[][50], int count, char id[]) {
@@ -53,12 +52,13 @@ int addAsset(char ids[][50], char names[][50], char types[][50],
     }
 
     char id[50];
-    getNonEmptyString("\nEnter Asset ID: ", id);
 
-    if (assetFind(ids, count, id) != -1) {
-        printf("Error: Asset ID '%s' already exists.\n", id);
-        return count;
-    }
+    do {
+        getNonEmptyString("\nEnter Asset ID: ", id);
+        if (assetFind(ids, count, id) != -1) {
+            printf("Error: Asset ID '%s' already exists. Try another ID.\n", id);
+        }
+    } while (assetFind(ids, count, id) != -1);
 
     strcpy(ids[count], id);
 
@@ -68,7 +68,7 @@ int addAsset(char ids[][50], char names[][50], char types[][50],
 
     getNonEmptyString("Enter Department: ", departments[count]);
 
-    values[count] = getDouble("Enter Asset Value ($): ", 0.0, 10000000.0);
+    values[count] = getDouble("Enter Asset Value (N$): ", 0.0, 10000000.0);
     conditions[count] = getInt("Enter Condition (1-Good, 2-Fair, 3-Poor, 4-Broken): ", 1, 4);
 
     printf("\nAsset added successfully!\n");
@@ -82,14 +82,14 @@ void displayAssets(char ids[][50], char names[][50], char types[][50],
         return;
     }
 
-    printf("\n========================================================================================\n");
-    printf("%-10s %-20s %-15s %-15s %-12s %-20s\n", "ID", "Name", "Type", "Department", "Value ($)", "Condition");
-    printf("========================================================================================\n");
+    printf("\n==========================================================================================\n");
+    printf("%-10s %-20s %-15s %-15s %-16s %-20s\n", "ID", "Name", "Type", "Department", "Value", "Condition");
+    printf("==========================================================================================\n");
 
     for (int i = 0; i < count; i++) {
         assetPrintRow(ids, names, types, departments, values, conditions, i);
     }
-    printf("========================================================================================\n");
+    printf("==========================================================================================\n");
 }
 
 void searchAssetById(char ids[][50], char names[][50], char types[][50],
@@ -107,11 +107,11 @@ void searchAssetById(char ids[][50], char names[][50], char types[][50],
         printf("Asset with ID '%s' not found.\n", searchId);
     } else {
         printf("\nAsset Found:\n");
-        printf("----------------------------------------------------------------------------------------\n");
-        printf("%-10s %-20s %-15s %-15s %-12s %-20s\n", "ID", "Name", "Type", "Department", "Value ($)", "Condition");
-        printf("----------------------------------------------------------------------------------------\n");
+        printf("------------------------------------------------------------------------------------------\n");
+        printf("%-10s %-20s %-15s %-15s %-16s %-20s\n", "ID", "Name", "Type", "Department", "Value", "Condition");
+        printf("------------------------------------------------------------------------------------------\n");
         assetPrintRow(ids, names, types, departments, values, conditions, index);
-        printf("----------------------------------------------------------------------------------------\n");
+        printf("------------------------------------------------------------------------------------------\n");
     }
 }
 
@@ -126,17 +126,17 @@ void searchAssetByDept(char ids[][50], char names[][50], char types[][50],
     getNonEmptyString("\nEnter Department Name: ", dept);
 
     int found = 0;
-    printf("\n========================================================================================\n");
-    printf("%-10s %-20s %-15s %-15s %-12s %-20s\n", "ID", "Name", "Type", "Department", "Value ($)", "Condition");
-    printf("========================================================================================\n");
+    printf("\n==========================================================================================\n");
+    printf("%-10s %-20s %-15s %-15s %-16s %-20s\n", "ID", "Name", "Type", "Department", "Value", "Condition");
+    printf("==========================================================================================\n");
 
     for (int i = 0; i < count; i++) {
-        if (strcasecmp(departments[i], dept) == 0) {
+        if (equalsIgnoreCase(departments[i], dept)) {
             assetPrintRow(ids, names, types, departments, values, conditions, i);
             found++;
         }
     }
-    printf("========================================================================================\n");
+    printf("==========================================================================================\n");
 
     if (found == 0) {
         printf("No assets found for department '%s'.\n", dept);
@@ -165,10 +165,10 @@ void displayAssetSummary(double values[], int count) {
     printf("         ASSET FINANCIAL SUMMARY        \n");
     printf("========================================\n");
     printf("Total Records:       %d\n", count);
-    printf("Total Asset Value:   $%.2f\n", totalValue);
-    printf("Average Asset Value: $%.2f\n", totalValue / count);
-    printf("Highest Asset Value: $%.2f\n", maxVal);
-    printf("Lowest Asset Value:  $%.2f\n", minVal);
+    printf("Total Asset Value:   %s\n", formatMoney(totalValue));
+    printf("Average Asset Value: %s\n", formatMoney(totalValue / count));
+    printf("Highest Asset Value: %s\n", formatMoney(maxVal));
+    printf("Lowest Asset Value:  %s\n", formatMoney(minVal));
     printf("========================================\n");
 }
 
@@ -292,6 +292,7 @@ int assetMenu(char outNames[][100], char outIds[][20], double outValues[]) {
                 break;
         }
     } while (choice != 7);
+
 
     for (int i = 0; i < count; i++) {
         strncpy(outIds[i], ids[i], 19);
