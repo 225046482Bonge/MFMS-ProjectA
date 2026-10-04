@@ -3,7 +3,8 @@
 
 #define maxDepartment 50
 
-void enterBudget(int n,
+void enterBudget(int start,
+                 int n,
                  char department[][50],
                  double budget[],
                  double expenditure[],
@@ -21,7 +22,8 @@ void checkExceeded(int n,
                    double expenditure[]);
 
 int budgetMenu(double budget[],
-                   double expenditure[],
-                   char department[][50]);
-                  
+               double expenditure[],
+               char department[][50],
+               int deptCount);
+
 #endif

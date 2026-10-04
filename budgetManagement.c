@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include "budgetManagement.h"
+#include "reports.h"          /* for MAX_DEPARTMENTS (if not in budgetManagement.h) */
 
 int budgetMenu(double budget[],
-                   double expenditure[],
-                   char department[][50]){
+               double expenditure[],
+               char department[][50], int deptCount)
+{
     int n;
 
     double remaining[maxDepartment];
@@ -11,26 +13,41 @@ int budgetMenu(double budget[],
     printf("How many departments? ");
     scanf("%d", &n);
 
-    if (n <= 0 || n > maxDepartment) {
+    if (n <= 0) {
         printf("Invalid number of departments.\n");
-        return 0;
+        return deptCount;     /* don't lose existing count */
     }
 
-    enterBudget(n, department, budget, expenditure, remaining);
-    displayBudget(n, department, budget, expenditure, remaining);
-    checkExceeded(n, department, budget, expenditure);
-    return n;
+    /* 2b: clamp so we don't overflow the array */
+    if (deptCount + n > maxDepartment) {
+        printf("Only %d more departments can be added.\n",
+               maxDepartment - deptCount);
+        n = maxDepartment - deptCount;
+    }
+
+    /* pass deptCount so new entries go AFTER existing ones */
+    enterBudget(deptCount, n, department, budget, expenditure, remaining);
+
+    /* 2d: display / check with the NEW TOTAL, not just n */
+    displayBudget(deptCount + n, department, budget, expenditure, remaining);
+    checkExceeded(deptCount + n, department, budget, expenditure);
+
+    /* 2d: return the new total */
+    return deptCount + n;
 }
 
 
-void enterBudget(int n,
+void enterBudget(int start,
+                 int n,
                  char department[][50],
                  double budget[],
                  double expenditure[],
-                 double remaining[]) {
+                 double remaining[])
+{
     int i;
 
-    for (i = 0; i < n; i++) {
+    /* 2c: start at 'start', loop 'n' times */
+    for (i = start; i < start + n; i++) {
         printf("\nDepartment %d Name: ", i + 1);
         scanf("%49s", department[i]);
 
@@ -58,7 +75,8 @@ void displayBudget(int n,
                    char department[][50],
                    double budget[],
                    double expenditure[],
-                   double remaining[]) {
+                   double remaining[])
+{
     int i;
 
     printf("\n===== BUDGET REPORT =====\n");
@@ -79,7 +97,8 @@ void displayBudget(int n,
 void checkExceeded(int n,
                    char department[][50],
                    double budget[],
-                   double expenditure[]) {
+                   double expenditure[])
+{
     int i;
     int found = 0;
 
