@@ -1,9 +1,9 @@
-/* validation.c - Functions for input and validation */
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #include "validation.h"
 
-/*if text is empty or contains only spaces */
+
 int isBlank(char text[])
 {
     int length = strlen(text);
@@ -24,7 +24,7 @@ int isBlank(char text[])
     return 1;
 }
 
-/*if text looks like name@example.com */
+
 int isValidEmail(char text[])
 {
     int length = strlen(text);
@@ -57,7 +57,7 @@ int isValidEmail(char text[])
     return 1;
 }
 
-/* Returns 1 when the text consists of 7 to 15 digits, possibly preceded by + */
+
 int isValidPhone(char text[])
 {
     int length = strlen(text);
@@ -84,7 +84,7 @@ int isValidPhone(char text[])
     return 1;
 }
 
-/* Repeatedly prompts the user until a whole number between min and max is entered */
+
 int getInt(char prompt[], int min, int max)
 {
     int value = 0;
@@ -95,7 +95,7 @@ int getInt(char prompt[], int min, int max)
     {
         printf("%s", prompt);
         result = scanf("%d", &value);
-        scanf("%*[^\n]");   /* discard anything left on the line */
+        scanf("%*[^\n]");   
 
         if (result != 1)
         {
@@ -114,7 +114,7 @@ int getInt(char prompt[], int min, int max)
     return value;
 }
 
-/* Asks until the user enters a number from min to max */
+
 double getDouble(char prompt[], double min, double max)
 {
     double value = 0.0;
@@ -125,7 +125,7 @@ double getDouble(char prompt[], double min, double max)
     {
         printf("%s", prompt);
         result = scanf("%lf", &value);
-        scanf("%*[^\n]");   /* discard anything left on the line */
+        scanf("%*[^\n]");   
 
         if (result != 1)
         {
@@ -144,9 +144,7 @@ double getDouble(char prompt[], double min, double max)
     return value;
 }
 
-/* Keeps prompting until the user provides non-empty text (spaces may appear within it).
- * The space at the start of the format discards a leftover Enter key from an
- * earlier scanf("%d") or scanf("%lf") call, as described in the Week 2 notes. */
+
 void getNonEmptyString(char prompt[], char text[])
 {
     do
@@ -161,7 +159,7 @@ void getNonEmptyString(char prompt[], char text[])
     } while (isBlank(text) == 1);
 }
 
-/* Keeps asking until the user enters a valid email */
+
 void getEmail(char prompt[], char text[])
 {
     do
@@ -176,7 +174,7 @@ void getEmail(char prompt[], char text[])
     } while (isValidEmail(text) == 0);
 }
 
-/* Keeps asking until the user provides a valid phone number */
+
 void getPhone(char prompt[], char text[])
 {
     do
@@ -189,4 +187,90 @@ void getPhone(char prompt[], char text[])
             printf("Error: please enter between 7 and 15 digits (a leading + is permitted).\n");
         }
     } while (isValidPhone(text) == 0);
+}
+
+
+int equalsIgnoreCase(char a[], char b[])
+{
+    int i = 0;
+
+    while (a[i] != '\0' && b[i] != '\0')
+    {
+        if (tolower((unsigned char)a[i]) != tolower((unsigned char)b[i]))
+        {
+            return 0;
+        }
+        i++;
+    }
+    return a[i] == b[i];
+}
+
+
+int nameContains(char text[], char part[])
+{
+    int textLength = strlen(text);
+    int partLength = strlen(part);
+    int i;
+    int j;
+
+    if (partLength == 0)
+    {
+        return 1;
+    }
+
+    for (i = 0; i + partLength <= textLength; i++)
+    {
+        j = 0;
+        while (j < partLength &&
+               tolower((unsigned char)text[i + j]) == tolower((unsigned char)part[j]))
+        {
+            j++;
+        }
+        if (j == partLength)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+char *formatMoney(double amount)
+{
+    static char buffers[4][40];
+    static int next = 0;
+    char plain[40];
+    char *out = buffers[next];
+    int negative = 0;
+    int digits;
+    int i;
+    int o = 0;
+
+    next = (next + 1) % 4;
+
+    if (amount < 0)
+    {
+        negative = 1;
+        amount = -amount;
+    }
+
+    sprintf(plain, "%.2f", amount);        
+    digits = strlen(plain) - 3;             
+
+    if (negative)
+    {
+        out[o++] = '-';
+    }
+    out[o++] = 'N';
+    out[o++] = '$';
+
+    for (i = 0; i < digits; i++)
+    {
+        out[o++] = plain[i];
+        if ((digits - i - 1) % 3 == 0 && i < digits - 1)
+        {
+            out[o++] = ',';
+        }
+    }
+    strcpy(out + o, plain + digits);        
+    return out;
 }

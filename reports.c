@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "reports.h"
+#include "validation.h"
 
-/*main entry point for the Reports module called from main. c*/
+
 void displayReportsMenu(
 double salaries[], int empCount,
 double budgets[], double expenditures[], char deptNames[][50], int deptCount,
@@ -18,14 +19,9 @@ printf("2. Budget Report\n");
 printf("3. Supplier Report\n");
 printf("4. Asset Report\n");
 printf("5. Return to Main Menu\n\n");
-printf("Enter your choice: ");
 
-/*input validation for menu choice*/
-if (scanf("%d", &choice) != 1) {
-printf("Invalid input. Please enter a number.\n");
-while (getchar() != '\n'); /*clear input buffer*/
-continue;
-}
+
+choice = getInt("Enter your choice (1-5): ", 1, 5);
 
 switch (choice) {
 case 1:
@@ -49,7 +45,7 @@ printf("Invalid choice! Please select an option between 1 and 5.\n");
 } while (choice != 5);
 }
 
-/*1. Employee Report Implementation*/
+
 void generateEmployeeReport(double salaries[], int empCount) {
 double totalSalary = 0;
 double highestSalary;
@@ -77,12 +73,12 @@ if (salaries[i] < lowestSalary) lowestSalary = salaries[i];
 averageSalary = totalSalary / empCount;
 
 printf("Total Employees: %d\n", empCount);
-printf("Average Salary: N$%.2f\n", averageSalary);
-printf("Highest Salary: N$%.2f\n", highestSalary);
-printf("Lowest Salary: N$%.2f\n\n", lowestSalary);
+printf("Average Salary: %s\n", formatMoney(averageSalary));
+printf("Highest Salary: %s\n", formatMoney(highestSalary));
+printf("Lowest Salary: %s\n\n", formatMoney(lowestSalary));
 }
 
-/*2. Budget Report Implementation*/
+
 void generateBudgetReport(double budgets[], double expenditures[], char deptNames[][50], int deptCount) {
 double totalAllocated = 0;
 double totalExpenditure = 0;
@@ -105,14 +101,14 @@ totalExpenditure += expenditures[i];
 
 remainingBudget = totalAllocated - totalExpenditure;
 
-printf("Total Allocated Budget: N$%.2f\n", totalAllocated);
-printf("Total Expenditure: N$%.2f\n", totalExpenditure);
-printf("Remaining Budget: N$%.2f\n\n", remainingBudget);
+printf("Total Allocated Budget: %s\n", formatMoney(totalAllocated));
+printf("Total Expenditure: %s\n", formatMoney(totalExpenditure));
+printf("Remaining Budget: %s\n\n", formatMoney(remainingBudget));
 
 printf("\nDepartments Exceeding Budget:\n");
 for (i = 0; i < deptCount; i++) {
 if (expenditures[i] > budgets[i]) {
-printf(" %s (Exceeded by: N$%.2f)\n\n", deptNames[i], expenditures[i] - budgets[i]);
+printf(" %s (Exceeded by: %s)\n\n", deptNames[i], formatMoney(expenditures[i] - budgets[i]));
 exceededCount++;
 }
 }
@@ -121,7 +117,6 @@ printf("None. All departments are within budget.\n\n");
 }
 }
 
-/*3. Supplier Report Implementation*/
 void generateSupplierReport(char supplierNames[][100], char supplierIDs[][20], int supplierCount) {
 int i;
 
@@ -140,7 +135,6 @@ printf("%-15s %-30s\n\n", supplierIDs[i], supplierNames[i]);
 }
 }
 
-/*4. Asset Report Implementation*/
 void generateAssetReport(char assetNames[][100], char assetIDs[][20], double assetValues[], int assetCount) {
 int i;
 
@@ -155,6 +149,6 @@ return;
 printf("%-15s %-30s %-15s\n", "Asset ID", "Asset Name", "Value");
 printf("-----------------------------------------------------------\n");
 for (i = 0; i < assetCount; i++) {
-printf("%-15s %-30s N$%.2f\n\n", assetIDs[i], assetNames[i], assetValues[i]);
+printf("%-15s %-30s %s\n\n", assetIDs[i], assetNames[i], formatMoney(assetValues[i]));
 }
 }
