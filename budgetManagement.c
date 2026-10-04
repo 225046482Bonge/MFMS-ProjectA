@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include "budgetManagement.h"
+#include "validation.h"
 
 int budgetMenu(double budget[],
-                   double expenditure[],
-                   char department[][50]){
+               double expenditure[],
+               char department[][50]) {
     int n;
 
     double remaining[maxDepartment];
 
-    printf("How many departments? ");
-    scanf("%d", &n);
-
-    if (n <= 0 || n > maxDepartment) {
-        printf("Invalid number of departments.\n");
-        return 0;
-    }
+    n = getInt("How many departments? ", 1, maxDepartment);
 
     enterBudget(n, department, budget, expenditure, remaining);
     displayBudget(n, department, budget, expenditure, remaining);
@@ -29,26 +24,13 @@ void enterBudget(int n,
                  double expenditure[],
                  double remaining[]) {
     int i;
+    char prompt[60];
 
     for (i = 0; i < n; i++) {
-        printf("\nDepartment %d Name: ", i + 1);
-        scanf("%49s", department[i]);
-
-        printf("Allocated Budget (N$): ");
-        scanf("%lf", &budget[i]);
-
-        while (budget[i] < 0) {
-            printf("Budget cannot be negative. Enter again: ");
-            scanf("%lf", &budget[i]);
-        }
-
-        printf("Expenditure (N$): ");
-        scanf("%lf", &expenditure[i]);
-
-        while (expenditure[i] < 0) {
-            printf("Expenditure cannot be negative. Enter again: ");
-            scanf("%lf", &expenditure[i]);
-        }
+        sprintf(prompt, "\nDepartment %d Name: ", i + 1);
+        getNonEmptyString(prompt, department[i]);
+        budget[i] = getDouble("Allocated Budget (N$): ", 0.0, 1000000000.0);
+        expenditure[i] = getDouble("Expenditure (N$): ", 0.0, 1000000000.0);
 
         remaining[i] = budget[i] - expenditure[i];
     }
@@ -65,9 +47,9 @@ void displayBudget(int n,
 
     for (i = 0; i < n; i++) {
         printf("\nDepartment: %s\n", department[i]);
-        printf("Allocated Budget: N$%.2f\n", budget[i]);
-        printf("Expenditure: N$%.2f\n", expenditure[i]);
-        printf("Remaining Budget: N$%.2f\n", remaining[i]);
+        printf("Allocated Budget: %s\n", formatMoney(budget[i]));
+        printf("Expenditure: %s\n", formatMoney(expenditure[i]));
+        printf("Remaining Budget: %s\n", formatMoney(remaining[i]));
 
         if (expenditure[i] <= budget[i])
             printf("Status: WITHIN BUDGET\n");
@@ -87,9 +69,9 @@ void checkExceeded(int n,
 
     for (i = 0; i < n; i++) {
         if (expenditure[i] > budget[i]) {
-            printf("%s exceeded budget by N$%.2f\n",
+            printf("%s exceeded budget by %s\n",
                    department[i],
-                   expenditure[i] - budget[i]);
+                   formatMoney(expenditure[i] - budget[i]));
             found = 1;
         }
     }
