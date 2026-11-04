@@ -17,7 +17,7 @@ struct Employee {
 struct Employee employees[MAX_EMPLOYEES];
 int employeeCount = 0;
 
-/* Function declarations */
+
 void addEmployee(void);
 void displayEmployees(void);
 void searchEmployee(void);
@@ -78,7 +78,7 @@ int main(void) {
     return 0;
 }
 
-/* Add an employee */
+
 void addEmployee(void) {
     if (employeeCount >= MAX_EMPLOYEES) {
         printf("Employee list is full!\n");
@@ -123,7 +123,7 @@ void addEmployee(void) {
     printf("Employee added successfully!\n");
 }
 
-/* Display all employees */
+
 void displayEmployees(void) {
     int i;
 
@@ -145,7 +145,7 @@ void displayEmployees(void) {
     }
 }
 
-/* Search for an employee */
+
 void searchEmployee(void) {
     int id, i, found = 0;
 
@@ -169,7 +169,7 @@ void searchEmployee(void) {
     }
 }
 
-/* Calculate employee salary */
+
 void calculateSalary(void) {
     int id, i, found = 0;
     float grossSalary, tax, netSalary;
@@ -185,7 +185,7 @@ void calculateSalary(void) {
                         + employees[i].transportAllowance
                         + employees[i].otherAllowance;
 
-            /* Example tax calculation */
+            
             if (grossSalary <= 5000) {
                 tax = 0;
             } else if (grossSalary <= 10000) {
@@ -212,7 +212,7 @@ void calculateSalary(void) {
     }
 }
 
-/* Display information about one employee */
+
 void displayEmployeeInfo(void) {
     int id, i, found = 0;
 
