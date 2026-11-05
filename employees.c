@@ -1,8 +1,8 @@
 
 #include <stdio.h>
 #include <string.h>
-
-#define MAX_EMPLOYEES 100
+#include "employees.h"
+#include "validation.h"
 
 struct Employee {
     int employeeID;
@@ -17,14 +17,15 @@ struct Employee {
 struct Employee employees[MAX_EMPLOYEES];
 int employeeCount = 0;
 
-/* Function declarations */
+
 void addEmployee(void);
 void displayEmployees(void);
 void searchEmployee(void);
 void calculateSalary(void);
 void displayEmployeeInfo(void);
+void updateSalaries(double salaries[]);
 
-int main(void) {
+int employeeMenu(double salaries[]) {
     int choice;
 
     do {
@@ -35,18 +36,12 @@ int main(void) {
         printf("4. Calculate Employee Salary\n");
         printf("5. Display Employee Information\n");
         printf("6. Exit\n");
-        printf("Enter your choice: ");
-
-        if (scanf("%d", &choice) != 1) {
-            printf("Invalid input. Please enter a number.\n");
-
-            while (getchar() != '\n');
-            continue;
-        }
+        choice = getInt("Enter your choice: ", 1, 6);
 
         switch (choice) {
             case 1:
                 addEmployee();
+                updateSalaries(salaries);
                 break;
 
             case 2:
@@ -75,10 +70,23 @@ int main(void) {
 
     } while (choice != 6);
 
-    return 0;
+    return employeeCount;
 }
 
-/* Add an employee */
+
+/* Copies each employee's gross salary into salaries[] so Reports can use it */
+void updateSalaries(double salaries[]) {
+    int i;
+
+    for (i = 0; i < employeeCount; i++) {
+        salaries[i] = employees[i].basicSalary
+                    + employees[i].housingAllowance
+                    + employees[i].transportAllowance
+                    + employees[i].otherAllowance;
+    }
+}
+
+
 void addEmployee(void) {
     if (employeeCount >= MAX_EMPLOYEES) {
         printf("Employee list is full!\n");
@@ -87,43 +95,20 @@ void addEmployee(void) {
 
     printf("\n===== ADD EMPLOYEE =====\n");
 
-    printf("Enter Employee ID: ");
-    scanf("%d", &employees[employeeCount].employeeID);
-
-    getchar();
-
-    printf("Enter Employee Name: ");
-    fgets(employees[employeeCount].name,
-          sizeof(employees[employeeCount].name), stdin);
-
-    employees[employeeCount].name[
-        strcspn(employees[employeeCount].name, "\n")] = '\0';
-
-    printf("Enter Department: ");
-    fgets(employees[employeeCount].department,
-          sizeof(employees[employeeCount].department), stdin);
-
-    employees[employeeCount].department[
-        strcspn(employees[employeeCount].department, "\n")] = '\0';
-
-    printf("Enter Basic Salary: ");
-    scanf("%f", &employees[employeeCount].basicSalary);
-
-    printf("Enter Housing Allowance: ");
-    scanf("%f", &employees[employeeCount].housingAllowance);
-
-    printf("Enter Transport Allowance: ");
-    scanf("%f", &employees[employeeCount].transportAllowance);
-
-    printf("Enter Other Allowance: ");
-    scanf("%f", &employees[employeeCount].otherAllowance);
+    employees[employeeCount].employeeID = getInt("Enter Employee ID: ", 1, 999999);
+    getNonEmptyString("Enter Employee Name: ", employees[employeeCount].name);
+    getNonEmptyString("Enter Department: ", employees[employeeCount].department);
+    employees[employeeCount].basicSalary = getDouble("Enter Basic Salary: ", 0, 1000000);
+    employees[employeeCount].housingAllowance = getDouble("Enter Housing Allowance: ", 0, 1000000);
+    employees[employeeCount].transportAllowance = getDouble("Enter Transport Allowance: ", 0, 1000000);
+    employees[employeeCount].otherAllowance = getDouble("Enter Other Allowance: ", 0, 1000000);
 
     employeeCount++;
 
     printf("Employee added successfully!\n");
 }
 
-/* Display all employees */
+
 void displayEmployees(void) {
     int i;
 
@@ -145,12 +130,11 @@ void displayEmployees(void) {
     }
 }
 
-/* Search for an employee */
+
 void searchEmployee(void) {
     int id, i, found = 0;
 
-    printf("Enter Employee ID to search: ");
-    scanf("%d", &id);
+    id = getInt("Enter Employee ID to search: ", 1, 999999);
 
     for (i = 0; i < employeeCount; i++) {
         if (employees[i].employeeID == id) {
@@ -169,13 +153,12 @@ void searchEmployee(void) {
     }
 }
 
-/* Calculate employee salary */
+
 void calculateSalary(void) {
     int id, i, found = 0;
     float grossSalary, tax, netSalary;
 
-    printf("Enter Employee ID: ");
-    scanf("%d", &id);
+    id = getInt("Enter Employee ID: ", 1, 999999);
 
     for (i = 0; i < employeeCount; i++) {
         if (employees[i].employeeID == id) {
@@ -185,7 +168,7 @@ void calculateSalary(void) {
                         + employees[i].transportAllowance
                         + employees[i].otherAllowance;
 
-            /* Example tax calculation */
+            
             if (grossSalary <= 5000) {
                 tax = 0;
             } else if (grossSalary <= 10000) {
@@ -212,12 +195,11 @@ void calculateSalary(void) {
     }
 }
 
-/* Display information about one employee */
+
 void displayEmployeeInfo(void) {
     int id, i, found = 0;
 
-    printf("Enter Employee ID: ");
-    scanf("%d", &id);
+    id = getInt("Enter Employee ID: ", 1, 999999);
 
     for (i = 0; i < employeeCount; i++) {
         if (employees[i].employeeID == id) {
